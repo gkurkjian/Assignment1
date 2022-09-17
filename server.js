@@ -8,7 +8,7 @@
 *  (including web sites) or distributed to other students.
 * 
 *  Name: __George_Kurkjian___ Student ID: ___137555207_____ Date: ___9-16-2022____
-*  Cyclic Link: _______________________________________________________________
+*  Cyclic Link: _______________https://good-teal-millipede-tutu.cyclic.app/__________________________
 *
 ********************************************************************************/ 
 
@@ -22,7 +22,6 @@ const MoviesDB = require("./modules/moviesDB.js");
 
 require('dotenv').config({path: "./keys.env"}); 
 const { MONGODB_CONN_STRING } = process.env;
-//console.log(MONGODB_CONN_STRING);
 
 const db = new MoviesDB();
 const app = express();
@@ -40,15 +39,7 @@ app.get('/', (req, res) => {
   res.json( { message: "API Listening"});
 });
 
-
-// this is for my sake of testing
-app.get('/test', (req, res) => {
-  res.send("Testing it\'s working fine.");
-});
-
-
 app.post('/api/movies', (req, res) => {
-  //res.send('/api/movies "POST" working fine');
   if(Object.keys(req.body).length === 0) {
     res.status(500).json({ error: "Invalid number "});
   } else {
@@ -58,15 +49,12 @@ app.post('/api/movies', (req, res) => {
 });
 
 app.get('/api/movies', (req, res) => {
-  //if ((!req.query.page || !req.query.perPage)) res.status(500).json({ message: "Missing the parameters"});
- // else {
     db.getAllMovies(req.query.page, req.query.perPage, req.query.title).then((data) => {
       if (data.length === 0) res.status(204).json({ message: "No data returned"});
       else res.status(201).json(data);
     }).catch((err) => {
       res.status(500).json({ error: err });
     })
-  //}
 });
 
 // this route to accepting a id
@@ -78,27 +66,7 @@ app.get('/api/movies/:_id', (req, res) => {
   })
 })
 
-
 app.put('/api/movie/:_id', async (req, res) => {
-  // //res.send('/api/movie "PUT" working fine');
-  // //if (Object.keys(req.body).length === 0) res.status(500).json({ error: "Invalid entry"});
-  // //else {
-  //   db.updateMovieById(req.body, req.params._id).then(() => {
-  //     res.status(201).json({ message: `The ${req.params} is added successfully`})
-  //     .catch((err) => {
-  //       res.status(500).json({ error: err })
-  //     })
-  //   })
-  // //}
-
-  // const id = req.params._id;
-  // const cont = req.body;
-  // db.updateMovieById(cont, id).then((msg) => {
-  //   res.status(200).json(msg);
-  // }).catch((err) => {
-  //   res.json(err)
-  // })
-
   try {
     if (Object.keys(req.body).length === 0) {
       return res.status(400).json({ error: "No data to update"});
@@ -119,8 +87,6 @@ app.delete('/api/movies/:_id', async (req, res) => {
   })
 });
 
-// copy paste it from the guide
-// It's giving error tho
 db.initialize(process.env.MONGODB_CONN_STRING).then(()=>{
   app.listen(HTTP_PORT, ()=>{
       console.log(`server listening on: ${HTTP_PORT}`);
