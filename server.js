@@ -15,6 +15,7 @@
 
 // Setting up the server
 const express = require('express');
+const path = require('path');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const MoviesDB = require("./modules/moviesDB.js");
@@ -29,6 +30,7 @@ app.use(cors());
 app.use(express.json());  // I guess I need body-parser middleware to run this
 app.use(express.urlencoded({ extended: true }));  // yes I solved it with this!
 
+
 const HTTP_PORT = process.env.PORT || 8080;
 
 app.get('/', (req, res) => {
@@ -39,15 +41,15 @@ app.post('/api/movies', (req, res) => {
   if(Object.keys(req.body).length === 0) {
     res.status(500).json({ error: "Invalid number "});
   } else {
-    db.addNewMovie(req.body).then((data) => { res.status(200).json(data)
+    db.addNewMovie(req.body).then((data) => { res.status(201).json(data)
     }).catch((err) => { res.status(500).json({ error: err }); });
   }
 });
 
 app.get('/api/movies', (req, res) => {
     db.getAllMovies(req.query.page, req.query.perPage, req.query.title).then((data) => {
-      if (data.length === 0) res.status(200).json({ message: "No data returned"});
-      else res.status(200).json(data);
+      if (data.length === 0) res.status(204).json({ message: "No data returned"});
+      else res.status(201).json(data);
     }).catch((err) => {
       res.status(500).json({ error: err });
     })
