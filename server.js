@@ -48,17 +48,17 @@ app.post('/api/movies', (req, res) => {
 
 app.get('/api/movies', (req, res) => {
     db.getAllMovies(req.query.page, req.query.perPage, req.query.title).then((data) => {
-      if (data.length === 0) res.status(204).json({ message: "No data returned"});
-      else res.status(201).json(data);
+      if (data.length === 0) res.status(204).json({ message: "No data returned"});  // 204 status code it's no content
+      else res.status(201).json(data);  // 201 status code it's when is created
     }).catch((err) => {
-      res.status(500).json({ error: err });
+      res.status(500).json({ error: err });  // 500 to show msg internal server error
     })
 });
 
 // this route to accepting a id
 app.get('/api/movies/:_id', (req, res) => {
   db.getMovieById(req.params._id).then((data) => {
-    res.status(201).json(data)
+    res.status(201).json(data)  // when it accepts should be code status 201 that proved data has crated
   }).catch((err) => {
     res.status(500).json({ error: err });
   })
@@ -67,18 +67,18 @@ app.get('/api/movies/:_id', (req, res) => {
 app.put('/api/movie/:_id', async (req, res) => {
   try {
     if (Object.keys(req.body).length === 0) {
-      return res.status(400).json({ error: "No data to update"});
+      return res.status(500).json({ error: "No data to update"});
     }
     const data = await db.updateMovieById(req.body, req.params._id);
     res.json({ success: "Movie updated!"});
   }catch(err) {
-    res.status(400).json({ error: err.message });
+    res.status(500).json({ error: err.message });
   }
 });
 
 app.delete('/api/movies/:_id', async (req, res) => {
   db.deleteMovieById(req.params._id).then(() => {
-    res.status(201).json({ message: `The ${req.params._id} removed from the system`})
+    res.status(202).json({ message: `The ${req.params._id} removed from the system`})  // 202 status code accepted to delete the movie
     .catch((err) => {
       res.status(500).json({ error: err })
     })
